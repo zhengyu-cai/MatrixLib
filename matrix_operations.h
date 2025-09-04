@@ -220,4 +220,4 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix) {
     return os;
 }
 
-} // namespace matrixlib
+}
