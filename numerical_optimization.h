@@ -1,4 +1,3 @@
-// numerical_optimization.h
 #pragma once
 #include "matrix_base.h"
 
@@ -24,7 +23,3 @@ template <typename T>
 Matrix<T> least_squares(const Matrix<T>& A, const Matrix<T>& b);
 
 } // namespace matrixlib
-
-template <typename T>
-matrixlib::Matrix<T> conjugate_gradient(const matrixlib::Matrix<T>& A, const matrixlib::Matrix<T>& b, 
-                                      size_t max_iterations = 1000, T tolerance = 1e-10) {}
