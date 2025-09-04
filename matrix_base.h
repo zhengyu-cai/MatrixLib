@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <initializer_list>
+#include <cstddef>
 
 namespace matrixlib {
 
@@ -16,18 +17,52 @@ protected:
     size_t cols_;
     
 public:
+    using value_type = T;
+    
     // 构造函数
-    Matrix(size_t rows, size_t cols);
-    Matrix(size_t rows, size_t cols, const T& init_value);
-    Matrix(std::initializer_list<std::initializer_list<T>> init);
+    Matrix(size_t rows, size_t cols) : rows_(rows), cols_(cols), data_(rows * cols) {}
+    Matrix(size_t rows, size_t cols, const T& init_value) : rows_(rows), cols_(cols), data_(rows * cols, init_value) {}
+    Matrix(std::initializer_list<std::initializer_list<T>> init) {
+        rows_ = init.size();
+        cols_ = init.begin()->size();
+        data_.reserve(rows_ * cols_);
+        for (const auto& row : init) {
+            for (const auto& elem : row) {
+                data_.push_back(elem);
+            }
+        }
+    }
     
-    // 拷贝构造函数和赋值运算符
-    Matrix(const Matrix& other);
-    Matrix& operator=(const Matrix& other);
+    // 拷贝构造函数
+    Matrix(const Matrix& other) : rows_(other.rows_), cols_(other.cols_), data_(other.data_) {}
     
-    // 移动构造函数和赋值运算符
-    Matrix(Matrix&& other) noexcept;
-    Matrix& operator=(Matrix&& other) noexcept;
+    // 拷贝赋值运算符
+    Matrix& operator=(const Matrix& other) {
+        if (this != &other) {
+            rows_ = other.rows_;
+            cols_ = other.cols_;
+            data_ = other.data_;
+        }
+        return *this;
+    }
+    
+    // 移动构造函数
+    Matrix(Matrix&& other) noexcept : rows_(other.rows_), cols_(other.cols_), data_(std::move(other.data_)) {
+        other.rows_ = 0;
+        other.cols_ = 0;
+    }
+    
+    // 移动赋值运算符
+    Matrix& operator=(Matrix&& other) noexcept {
+        if (this != &other) {
+            rows_ = other.rows_;
+            cols_ = other.cols_;
+            data_ = std::move(other.data_);
+            other.rows_ = 0;
+            other.cols_ = 0;
+        }
+        return *this;
+    }
     
     // 基础访问方法
     size_t rows() const { return rows_; }
@@ -35,8 +70,8 @@ public:
     size_t size() const { return rows_ * cols_; }
     
     // 元素访问
-    T& operator()(size_t row, size_t col);
-    const T& operator()(size_t row, size_t col) const;
+    T& operator()(size_t row, size_t col) { return data_[row * cols_ + col]; }
+    const T& operator()(size_t row, size_t col) const { return data_[row * cols_ + col]; }
     T* data() { return data_.data(); }
     const T* data() const { return data_.data(); }
     
@@ -49,4 +84,4 @@ public:
     virtual ~Matrix() = default;
 };
 
-} // namespace matrixlib
+} // namespace matrixlib  // 确保这里有这个关闭的大括号！
