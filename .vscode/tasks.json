@@ -9,7 +9,9 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-I", "D:/libs/eigen-3.3.8",
+                "-Wa,-mbig-obj"
             ],
             "options": {
                 "cwd": "${fileDirname}"

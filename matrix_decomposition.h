@@ -1,4 +1,3 @@
-// matrix_decomposition.h
 #pragma once
 #include "matrix_base.h"
 #include "linear_algebra.h"
@@ -238,4 +237,4 @@ namespace matrixlib
         }
     };
 
-} // namespace matrixlib
+}

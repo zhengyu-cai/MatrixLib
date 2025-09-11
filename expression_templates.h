@@ -1,4 +1,3 @@
-// expression_templates.h
 #pragma once
 #include <cstddef>
 #include "matrix_base.h"
@@ -133,4 +132,4 @@ Matrix<T> matrix_multiply(const Matrix<T>& lhs, const Matrix<T>& rhs) {
     return result;
 }
 
-} // namespace matrixlib
+}

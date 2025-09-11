@@ -80,6 +80,51 @@ namespace matrixlib
         return x;
     }
 
+    // 使用表达式模板优化的共轭梯度法
+    template <typename T>
+    Matrix<T> conjugate_gradient_op(const Matrix<T> &A, const Matrix<T> &b,
+                                 size_t max_iterations = 1000, T tolerance = 1e-10)
+    {
+        if (A.rows() != A.cols())
+        {
+            throw std::invalid_argument("Matrix A must be square");
+        }
+
+        if (b.cols() != 1 || A.rows() != b.rows())
+        {
+            throw std::invalid_argument("Vector b must be a column vector with the same number of rows as A");
+        }
+
+        size_t n = A.rows();
+        Matrix<T> x(n, 1, 0); // 初始化解向量
+        Matrix<T> r = b;
+        Matrix<T> p = r;
+        T r_dot = dot_product(r, r);
+
+        for (size_t i = 0; i < max_iterations; ++i)
+        {
+            if (std::sqrt(r_dot) < tolerance)
+            {
+                break;
+            }
+
+           Matrix<T> Ap = matrix_multiply(A, p);
+            T alpha = r_dot / dot_product(p, Ap);
+            x = matrix_add(x, alpha * p);
+
+            Matrix<T> r_new = matrix_subtract(r, alpha * Ap);
+            T r_new_dot = dot_product(r_new, r_new);
+
+            T beta = r_new_dot / r_dot;
+            p = matrix_add(r_new, beta * p);
+
+            r = r_new;
+            r_dot = r_new_dot;
+        }
+
+        return x;
+    }
+
     // 雅可比迭代
     template <typename T>
     Matrix<T> jacobi_iteration(const Matrix<T> &A, const Matrix<T> &b,
@@ -212,4 +257,4 @@ namespace matrixlib
         return conjugate_gradient(AtA, ATb);
     }
 
-} // namespace matrixlib
+}

@@ -1,4 +1,3 @@
-// matrix_base.h
 #pragma once
 #include <vector>
 #include <iostream>
@@ -84,4 +83,4 @@ public:
     virtual ~Matrix() = default;
 };
 
-} // namespace matrixlib  // 确保这里有这个关闭的大括号！
+}
